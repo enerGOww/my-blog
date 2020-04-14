@@ -57,6 +57,7 @@ $config = [
     'modules' => [
         'admin' => [
             'class' => 'app\module\admin\AdminModule',
+            'layout' => '@app/module/admin/views/layouts/admin',
         ],
     ],
 
