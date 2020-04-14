@@ -46,6 +46,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             [['isAdmin'], 'integer'],
+            [['name', 'password', 'email'], 'required'],
             [['name', 'email', 'password', 'photo'], 'string', 'max' => 255],
         ];
     }

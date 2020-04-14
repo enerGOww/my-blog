@@ -41,8 +41,9 @@ class Article extends ActiveRecord
     public function rules()
     {
         return [
+            [['title'], 'required'],
             [['description', 'content'], 'string'],
-            [['date'], 'safe'],
+            [['date'], 'date', 'format' => 'php:Y-m-d'],
             [['viewed', 'user_id', 'status', 'category_id'], 'integer'],
             [['title', 'image'], 'string', 'max' => 255],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['category_id' => 'id']],
