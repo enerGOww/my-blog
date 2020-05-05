@@ -43,7 +43,8 @@ class Article extends ActiveRecord
         return [
             [['title'], 'required'],
             [['description', 'content'], 'string'],
-            [['date'], 'date', 'format' => 'php:Y-m-d'],
+            [['date'], 'date', 'format' => date('Y-m-d')],
+            [['date'], 'default', 'value' => date('Y-m-d')],
             [['viewed', 'user_id', 'status', 'category_id'], 'integer'],
             [['title', 'image'], 'string', 'max' => 255],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['category_id' => 'id']],

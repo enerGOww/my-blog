@@ -34,9 +34,10 @@ class Comment extends ActiveRecord
     public function rules()
     {
         return [
+            [['text'], 'required'],
             [['date'], 'safe'],
             [['user_id', 'article_id', 'status'], 'integer'],
-            [['text'], 'string', 'required', 'max' => 255],
+            [['text'], 'string', 'max' => 255],
             [['article_id'], 'exist', 'skipOnError' => true, 'targetClass' => Article::class, 'targetAttribute' => ['article_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
