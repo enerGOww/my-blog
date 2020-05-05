@@ -2,6 +2,7 @@
 
 namespace app\entity;
 
+use app\traits\ImageTrait;
 use yii\base\InvalidConfigException;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -27,6 +28,8 @@ use yii\db\ActiveRecord;
  */
 class Article extends ActiveRecord
 {
+    use ImageTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -70,24 +73,11 @@ class Article extends ActiveRecord
         ];
     }
 
-    /**
-     * Gets query for [[Category]].
-     *
-     * @return ActiveQuery
-     */
-    public function getCategory()
-    {
-        return $this->hasOne(Category::class, ['id' => 'category_id']);
-    }
 
-    /**
-     * Gets query for [[ArticleTags]].
-     *
-     * @return ActiveQuery
-     */
-    public function getArticleTags()
+    public function beforeDelete()
     {
-        return $this->hasMany(ArticleTag::class, ['article_id' => 'id']);
+        $this->deleteImage();
+        return parent::beforeDelete();
     }
 
     /**
@@ -98,15 +88,5 @@ class Article extends ActiveRecord
     {
         return $this->hasMany(Tag::class, ['id' => 'tag_id'])
             ->viaTable('article_tag', ['article_id' => 'id']);
-    }
-
-    /**
-     * Gets query for [[Comments]].
-     *
-     * @return ActiveQuery
-     */
-    public function getComments()
-    {
-        return $this->hasMany(Comment::class, ['article_id' => 'id']);
     }
 }

@@ -1,11 +1,15 @@
 <?php
 
+use app\entity\Article;
+use app\search\ArticleSearch;
+use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\web\View;
 
-/* @var $this yii\web\View */
-/* @var $searchModel app\search\ArticleSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $this View */
+/* @var $searchModel ArticleSearch */
+/* @var $dataProvider ActiveDataProvider */
 
 $this->title = 'Articles';
 $this->params['breadcrumbs'][] = $this->title;
@@ -31,6 +35,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'description:ntext',
             'content:ntext',
             'date',
+            [
+                'format' => 'html',
+                'label' => 'Image',
+                'value' => function(Article $data) {
+                    return Html::img($data->getImage(), ['width' => 200]);
+                }
+            ],
             //'image',
             //'viewed',
             //'user_id',
