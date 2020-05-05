@@ -2,18 +2,32 @@
 
 namespace app\module\admin\controllers;
 
+use app\repository\CategoryRepository;
 use Yii;
 use app\entity\Category;
 use app\search\CategorySearch;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * CategoryController implements the CRUD actions for Category model.
  */
 class CategoryController extends Controller
 {
+    /** @var CategoryRepository */
+    private $categoryRepository;
+
+    public function __construct(
+        $id,
+        $module,
+        CategoryRepository $categoryRepository,
+        $config = []
+    ) {
+        parent::__construct($id, $module, $config);
+        $this->categoryRepository = $categoryRepository;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -45,15 +59,13 @@ class CategoryController extends Controller
     }
 
     /**
-     * Displays a single Category model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
+     * @param $id
+     * @return string
      */
     public function actionView($id)
     {
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $this->categoryRepository->findModelById($id),
         ]);
     }
 
@@ -64,64 +76,43 @@ class CategoryController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Category();
+        $category = new Category();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($category->load(Yii::$app->request->post()) && $category->save()) {
+            return $this->redirect(['view', 'id' => $category->id]);
         }
 
         return $this->render('create', [
-            'model' => $model,
+            'model' => $category,
         ]);
     }
 
     /**
-     * Updates an existing Category model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
+     * @param $id
+     * @return string|Response
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $category = $this->categoryRepository->findModelById($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($category->load(Yii::$app->request->post()) && $category->save()) {
+            return $this->redirect(['view', 'id' => $category->id]);
         }
 
         return $this->render('update', [
-            'model' => $model,
+            'model' => $category,
         ]);
     }
 
     /**
-     * Deletes an existing Category model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
+     * @param $id
+     * @return Response
+     * @throws
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $this->categoryRepository->findModelById($id)->delete();
 
         return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the Category model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Category the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Category::findOne($id)) !== null) {
-            return $model;
-        }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
