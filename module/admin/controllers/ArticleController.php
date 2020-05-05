@@ -3,10 +3,10 @@
 namespace app\module\admin\controllers;
 
 use app\command\SaveImageCommand;
-use app\entity\Category;
 use app\model\ImageUploader;
 use app\repository\ArticleRepository;
 use app\repository\CategoryRepository;
+use app\repository\TagRepository;
 use Yii;
 use app\entity\Article;
 use app\search\ArticleSearch;
@@ -30,18 +30,23 @@ class ArticleController extends Controller
     /** @var CategoryRepository */
     private $categoryRepository;
 
+    /** @var TagRepository */
+    private $tagRepository;
+
     public function __construct(
         $id,
         $module,
         SaveImageCommand $saveImageCommand,
         ArticleRepository $articleRepository,
         CategoryRepository $categoryRepository,
+        TagRepository $tagRepository,
         $config = []
     ) {
         parent::__construct($id, $module, $config);
         $this->saveImageCommand = $saveImageCommand;
         $this->articleRepository = $articleRepository;
         $this->categoryRepository = $categoryRepository;
+        $this->tagRepository = $tagRepository;
     }
 
     /**
@@ -153,6 +158,11 @@ class ArticleController extends Controller
         return $this->render('image', compact('imageModel'));
     }
 
+    /**
+     * @param int $id
+     * @return string|Response
+     * @throws NotFoundHttpException
+     */
     public function actionSetCategory(int $id)
     {
         $article = $this->articleRepository->findModelById($id);
@@ -167,5 +177,26 @@ class ArticleController extends Controller
         $selectedCategory = $article->category_id;
         $categories = ArrayHelper::map($this->categoryRepository->findAll(), 'id', 'title');
         return $this->render('category', compact('article', 'selectedCategory', 'categories'));
+    }
+
+    /**
+     * @param int $id
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionSetTags(int $id)
+    {
+        $article = $this->articleRepository->findModelById($id);
+
+        if (Yii::$app->request->post()) {
+            $tagIds = Yii::$app->request->post('tags');
+            $tags = $this->tagRepository->findAllTagsByIds($tagIds);
+            $article->saveTags($tags);
+            $this->redirect(['view', 'id' => $article->id]);
+        }
+
+        $selectedTags = $this->tagRepository->findAllIdsByArticleId($id);
+        $tags = ArrayHelper::map($this->tagRepository->findAll(), 'id', 'title');
+        return $this->render('tags', compact('article', 'selectedTags', 'tags'));
     }
 }

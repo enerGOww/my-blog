@@ -73,11 +73,41 @@ class Article extends ActiveRecord
         ];
     }
 
-
+    /**
+     * @return bool
+     */
     public function beforeDelete()
     {
         $this->deleteImage();
         return parent::beforeDelete();
+    }
+
+    /**
+     * @param $categoryId
+     * @return bool
+     */
+    public function saveCategory($categoryId): bool
+    {
+        $this->category_id = $categoryId;
+        return $this->save(false);
+    }
+
+    /**
+     * @param $tags
+     */
+    public function saveTags($tags)
+    {
+        if (is_array($tags)) {
+            $this->clearCurrentTags();
+            foreach ($tags as $tag) {
+                $this->link('tags', $tag);
+            }
+        }
+    }
+
+    public function clearCurrentTags()
+    {
+        ArticleTag::deleteAll(['article_id' => $this->id]);
     }
 
     /**
@@ -88,16 +118,5 @@ class Article extends ActiveRecord
     {
         return $this->hasMany(Tag::class, ['id' => 'tag_id'])
             ->viaTable('article_tag', ['article_id' => 'id']);
-    }
-
-    public function getCategory()
-    {
-        return $this->hasOne(Category::class, ['id' => 'category_id']);
-    }
-
-    public function saveCategory($categoryId): bool
-    {
-        $this->category_id = $categoryId;
-        return $this->save(false);
     }
 }
