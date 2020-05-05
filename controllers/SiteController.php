@@ -106,4 +106,14 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+
+    public function actionArticle()
+    {
+        return $this->render('article');
+    }
+
+    public function actionCategory()
+    {
+        return $this->render('category');
+    }
 }
