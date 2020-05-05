@@ -3,11 +3,14 @@
 namespace app\module\admin\controllers;
 
 use app\command\SaveImageCommand;
+use app\entity\Category;
 use app\model\ImageUploader;
 use app\repository\ArticleRepository;
+use app\repository\CategoryRepository;
 use Yii;
 use app\entity\Article;
 use app\search\ArticleSearch;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -24,16 +27,21 @@ class ArticleController extends Controller
     /** @var ArticleRepository */
     private $articleRepository;
 
+    /** @var CategoryRepository */
+    private $categoryRepository;
+
     public function __construct(
         $id,
         $module,
         SaveImageCommand $saveImageCommand,
         ArticleRepository $articleRepository,
+        CategoryRepository $categoryRepository,
         $config = []
     ) {
         parent::__construct($id, $module, $config);
         $this->saveImageCommand = $saveImageCommand;
         $this->articleRepository = $articleRepository;
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
@@ -143,5 +151,21 @@ class ArticleController extends Controller
             }
         }
         return $this->render('image', compact('imageModel'));
+    }
+
+    public function actionSetCategory(int $id)
+    {
+        $article = $this->articleRepository->findModelById($id);
+
+        if (Yii::$app->request->isPost) {
+            $category = Yii::$app->request->post('category');
+            if ($article->saveCategory($category)) {
+                return $this->redirect(['view', 'id' => $article->id]);
+            }
+        }
+
+        $selectedCategory = $article->category_id;
+        $categories = ArrayHelper::map($this->categoryRepository->findAll(), 'id', 'title');
+        return $this->render('category', compact('article', 'selectedCategory', 'categories'));
     }
 }

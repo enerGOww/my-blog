@@ -89,4 +89,15 @@ class Article extends ActiveRecord
         return $this->hasMany(Tag::class, ['id' => 'tag_id'])
             ->viaTable('article_tag', ['article_id' => 'id']);
     }
+
+    public function getCategory()
+    {
+        return $this->hasOne(Category::class, ['id' => 'category_id']);
+    }
+
+    public function saveCategory($categoryId): bool
+    {
+        $this->category_id = $categoryId;
+        return $this->save(false);
+    }
 }
