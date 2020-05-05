@@ -2,18 +2,32 @@
 
 namespace app\module\admin\controllers;
 
+use app\repository\TagRepository;
 use Yii;
 use app\entity\Tag;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * TagController implements the CRUD actions for Tag model.
  */
 class TagController extends Controller
 {
+    /** @var TagRepository */
+    private $tagRepository;
+
+    public function __construct(
+        $id,
+        $module,
+        TagRepository $tagRepository,
+        $config = []
+    ) {
+        parent::__construct($id, $module, $config);
+        $this->tagRepository = $tagRepository;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -45,15 +59,13 @@ class TagController extends Controller
     }
 
     /**
-     * Displays a single Tag model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
+     * @param $id
+     * @return string
      */
     public function actionView($id)
     {
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $this->tagRepository->findModelById($id),
         ]);
     }
 
@@ -64,64 +76,43 @@ class TagController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Tag();
+        $tag = new Tag();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($tag->load(Yii::$app->request->post()) && $tag->save()) {
+            return $this->redirect(['view', 'id' => $tag->id]);
         }
 
         return $this->render('create', [
-            'model' => $model,
+            'model' => $tag,
         ]);
     }
 
     /**
-     * Updates an existing Tag model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
+     * @param $id
+     * @return string|Response
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $tag = $this->tagRepository->findModelById($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($tag->load(Yii::$app->request->post()) && $tag->save()) {
+            return $this->redirect(['view', 'id' => $tag->id]);
         }
 
         return $this->render('update', [
-            'model' => $model,
+            'model' => $tag,
         ]);
     }
 
     /**
-     * Deletes an existing Tag model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
+     * @param $id
+     * @return Response
+     * @throws
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $this->tagRepository->findModelById($id)->delete();
 
         return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the Tag model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Tag the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Tag::findOne($id)) !== null) {
-            return $model;
-        }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
