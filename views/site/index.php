@@ -31,9 +31,9 @@ $this->title = 'My blog';
                     </div>
                     <div class="post-content">
                         <header class="entry-header text-center text-uppercase">
-                            <h6><a href="#"> <?= $article->category->title ?></a></h6>
+                            <h6><a href="<?= Url::toRoute(['site/category', 'id' => $article->category_id]) ?>"> <?= $article->category->title ?></a></h6>
 
-                            <h1 class="entry-title"><a href="<?= Url::toRoute(['site/article', 'id' => $article->id]) ?>">Home is peaceful place</a></h1>
+                            <h1 class="entry-title"><a href="<?= Url::toRoute(['site/article', 'id' => $article->id]) ?>"><?= $article->title ?></a></h1>
 
 
                         </header>

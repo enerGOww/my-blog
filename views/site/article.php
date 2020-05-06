@@ -20,13 +20,13 @@ $this->title = $article->title;
             <div class="col-md-8">
                 <article class="post">
                     <div class="post-thumb">
-                        <a href="blog.html"><img src="<?= $article->getImage() ?>" alt=""></a>
+                        <img src="<?= $article->getImage() ?>" alt="">
                     </div>
                     <div class="post-content">
                         <header class="entry-header text-center text-uppercase">
-                            <h6><a href="#"> <?= $article->category->title ?></a></h6>
+                            <h6><a href="<?= Url::toRoute('site/category', ['id' => $article->category_id]) ?>"> <?= $article->category->title ?></a></h6>
 
-                            <h1 class="entry-title"><a href="blog.html"><?= $article->title ?></a></h1>
+                            <h1 class="entry-title"><?= $article->title ?></h1>
 
                         </header>
                         <div class="entry-content">

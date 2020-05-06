@@ -8,6 +8,7 @@
 
 use app\entity\Article;
 use app\entity\Category;
+use yii\helpers\Url;
 use yii\web\View;
 
 ?>
@@ -23,13 +24,13 @@ use yii\web\View;
                 <div class="popular-post">
 
 
-                    <a href="#" class="popular-img"><img src= <?= $popular->getImage(); ?> >
+                    <a href="<?= Url::toRoute(['site/article', 'id' => $popular->id]) ?>" class="popular-img"><img src= <?= $popular->getImage(); ?> >
 
                         <div class="p-overlay"></div>
                     </a>
 
                     <div class="p-content">
-                        <a href="#" class="text-uppercase"><?= $popular->title ?></a>
+                        <a href="<?= Url::toRoute(['site/article', 'id' => $popular->id]) ?>" class="text-uppercase"><?= $popular->title ?></a>
                         <span class="p-date"><?= $popular->getDate() ?></span>
 
                     </div>
@@ -47,12 +48,12 @@ use yii\web\View;
                 <div class="thumb-latest-posts">
                     <div class="media">
                         <div class="media-left">
-                            <a href="#" class="popular-img"><img src= <?= $recent->getImage() ?> >
+                            <a href="<?= Url::toRoute(['site/article', 'id' => $recent->id]) ?>" class="popular-img"><img src= <?= $recent->getImage() ?> >
                                 <div class="p-overlay"></div>
                             </a>
                         </div>
                         <div class="p-content">
-                            <a href="#" class="text-uppercase"> <?= $recent->title ?> </a>
+                            <a href="<?= Url::toRoute(['site/article', 'id' => $recent->id]) ?>" class="text-uppercase"> <?= $recent->title ?> </a>
                             <span class="p-date"> <?= $recent->getDate() ?> </span>
                         </div>
                     </div>
@@ -68,7 +69,7 @@ use yii\web\View;
             <ul>
                 <?php foreach ($categories as $category): ?>
                     <li>
-                        <a href="#"> <?= $category->title ?> </a>
+                        <a href="<?= Url::toRoute(['site/category', 'id' => $category->id]) ?>"> <?= $category->title ?> </a>
                         <span class="post-count pull-right"> (<?= $category->getArticles()->count() ?>) </span>
                     </li>
                 <?php endforeach; ?>

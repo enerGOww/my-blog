@@ -10,12 +10,18 @@ class PaginationService
     /**
      * @param string $className
      * @param int $pageSize
+     * @param array $whereCondition ['columnName' => condition]
      * @return ActiveRecord[]
      */
-    public function getPagination(string $className, int $pageSize = 5): array
+    public function getPagination(string $className, array $whereCondition = [], int $pageSize = 5): array
     {
         /** @var ActiveRecord $className */
         $query = $className::find();
+
+        foreach ($whereCondition as $column => $condition) {
+            $query->where(["$column" => $condition]);
+        }
+
         $count = $query->count();
 
         $pagination = new Pagination(['totalCount' => $count, 'pageSize' => $pageSize]);

@@ -110,6 +110,56 @@ class SiteController extends Controller
     }
 
     /**
+     * @param int $id
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionArticle(int $id)
+    {
+        $article = $this->articleRepository->findModelById($id);
+
+        $populars = $this->articleRepository->findThreeOrderByViewedDesc();
+        $recents = $this->articleRepository->findFourOrderByDateDesc();
+        $categories = $this->categoryRepository->findAll();
+
+        return $this->render('article', compact(
+            'article',
+            'populars',
+            'recents',
+            'categories'
+        ));
+    }
+
+    public function actionCategory(int $id)
+    {
+        list($pagination, $articles) = $this->paginationService
+            ->getPagination(Article::class, ['category_id' => $id]);
+
+        $populars = $this->articleRepository->findThreeOrderByViewedDesc();
+        $recents = $this->articleRepository->findFourOrderByDateDesc();
+        $categories = $this->categoryRepository->findAll();
+
+        return $this->render('category', compact(
+            'articles',
+            'pagination',
+            'populars',
+            'recents',
+            'categories'
+        ));
+    }
+
+    /**
+     * @param int $id
+     * @return string
+     */
+    public function actionTag(int $id)
+    {
+        $tag = $this->tagRepository->findModelById($id);
+
+        return $this->render('tag', compact('tag'));
+    }
+
+    /**
      * Login action.
      *
      * @return Response|string
@@ -151,43 +201,5 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
-    }
-
-    /**
-     * @param int $id
-     * @return string
-     * @throws NotFoundHttpException
-     */
-    public function actionArticle(int $id)
-    {
-        $article = $this->articleRepository->findModelById($id);
-
-        $populars = $this->articleRepository->findThreeOrderByViewedDesc();
-        $recents = $this->articleRepository->findFourOrderByDateDesc();
-        $categories = $this->categoryRepository->findAll();
-
-        return $this->render(
-            'article', compact(
-            'article',
-                'populars',
-                'recents',
-                'categories'
-            ));
-    }
-
-    public function actionCategory()
-    {
-        return $this->render('category');
-    }
-
-    /**
-     * @param int $id
-     * @return string
-     */
-    public function actionTag(int $id)
-    {
-        $tag = $this->tagRepository->findModelById($id);
-
-        return $this->render('tag', compact('tag'));
     }
 }
