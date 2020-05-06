@@ -78,7 +78,7 @@ class TagController extends Controller
     {
         $tag = new Tag();
 
-        if ($tag->load(Yii::$app->request->post()) && $tag->save()) {
+        if ($tag->load(Yii::$app->request->post()) && $this->tagRepository->save($tag)) {
             return $this->redirect(['view', 'id' => $tag->id]);
         }
 
@@ -95,7 +95,7 @@ class TagController extends Controller
     {
         $tag = $this->tagRepository->findModelById($id);
 
-        if ($tag->load(Yii::$app->request->post()) && $tag->save()) {
+        if ($tag->load(Yii::$app->request->post()) && $this->tagRepository->save($tag)) {
             return $this->redirect(['view', 'id' => $tag->id]);
         }
 
@@ -111,7 +111,7 @@ class TagController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->tagRepository->findModelById($id)->delete();
+        $this->tagRepository->deleteById($id);
 
         return $this->redirect(['index']);
     }

@@ -4,7 +4,7 @@ namespace app\repository;
 
 use app\entity\Category;
 
-class CategoryRepository extends AbstractModelRepository
+class CategoryRepository extends BaseModelRepository
 {
     /**
      * @return array
@@ -24,5 +24,19 @@ class CategoryRepository extends AbstractModelRepository
         /** @var Category $model */
         $model = $this->getModel(Category::class, $id);
         return $model;
+    }
+
+    /**
+     * @param int $id
+     * @return bool
+     */
+    public function deleteById(int $id): bool
+    {
+        $model = Category::findOne($id);
+        if ($model !== null) {
+            return $this->delete($model);
+        }
+
+        return true;
     }
 }

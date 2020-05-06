@@ -5,7 +5,7 @@ namespace app\repository;
 use app\entity\Tag;
 use yii\db\Query;
 
-class TagRepository extends AbstractModelRepository
+class TagRepository extends BaseModelRepository
 {
     /**
      * @return Tag[]
@@ -47,5 +47,19 @@ class TagRepository extends AbstractModelRepository
     public function findAllTagsByIds(array $ids): array
     {
         return Tag::find()->where(['id' => $ids])->all();
+    }
+
+    /**
+     * @param int $id
+     * @return bool
+     */
+    public function deleteById(int $id): bool
+    {
+        $model = Tag::findOne($id);
+        if ($model !== null) {
+            return $this->delete($model);
+        }
+
+        return true;
     }
 }

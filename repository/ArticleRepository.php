@@ -5,7 +5,7 @@ namespace app\repository;
 use app\entity\Article;
 use yii\web\NotFoundHttpException;
 
-class ArticleRepository extends AbstractModelRepository
+class ArticleRepository extends BaseModelRepository
 {
     /**
      * @param int $id
@@ -17,5 +17,19 @@ class ArticleRepository extends AbstractModelRepository
         /** @var Article $model */
         $model = $this->getModel(Article::class, $id);
         return $model;
+    }
+
+    /**
+     * @param int $id
+     * @return bool
+     */
+    public function deleteById(int $id): bool
+    {
+        $model = Article::findOne($id);
+        if ($model !== null) {
+            return $this->delete($model);
+        }
+
+        return true;
     }
 }

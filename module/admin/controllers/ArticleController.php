@@ -101,7 +101,7 @@ class ArticleController extends Controller
     {
         $model = new Article();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $this->articleRepository->save($model)) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -121,7 +121,7 @@ class ArticleController extends Controller
     {
         $model = $this->articleRepository->findModelById($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $this->articleRepository->save($model)) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -137,7 +137,7 @@ class ArticleController extends Controller
      */
     public function actionDelete(int $id)
     {
-        $this->articleRepository->findModelById($id)->delete();
+        $this->articleRepository->deleteById($id);
 
         return $this->redirect(['index']);
     }
@@ -168,8 +168,9 @@ class ArticleController extends Controller
         $article = $this->articleRepository->findModelById($id);
 
         if (Yii::$app->request->isPost) {
-            $category = Yii::$app->request->post('category');
-            if ($article->saveCategory($category)) {
+            $categoryId = Yii::$app->request->post('category');
+            $article->category_id = $categoryId;
+            if ($this->articleRepository->save($article)) {
                 return $this->redirect(['view', 'id' => $article->id]);
             }
         }

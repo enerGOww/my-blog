@@ -78,7 +78,7 @@ class CategoryController extends Controller
     {
         $category = new Category();
 
-        if ($category->load(Yii::$app->request->post()) && $category->save()) {
+        if ($category->load(Yii::$app->request->post()) && $this->categoryRepository->save($category)) {
             return $this->redirect(['view', 'id' => $category->id]);
         }
 
@@ -95,7 +95,7 @@ class CategoryController extends Controller
     {
         $category = $this->categoryRepository->findModelById($id);
 
-        if ($category->load(Yii::$app->request->post()) && $category->save()) {
+        if ($category->load(Yii::$app->request->post()) && $this->categoryRepository->save($category)) {
             return $this->redirect(['view', 'id' => $category->id]);
         }
 
@@ -111,7 +111,7 @@ class CategoryController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->categoryRepository->findModelById($id)->delete();
+        $this->categoryRepository->deleteById($id);
 
         return $this->redirect(['index']);
     }

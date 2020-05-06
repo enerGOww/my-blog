@@ -46,7 +46,7 @@ class Article extends ActiveRecord
         return [
             [['title'], 'required'],
             [['description', 'content'], 'string'],
-            [['date'], 'date', 'format' => date('Y-m-d')],
+            [['date'], 'date', 'format' => 'php:Y-m-d'],
             [['date'], 'default', 'value' => date('Y-m-d')],
             [['viewed', 'user_id', 'status', 'category_id'], 'integer'],
             [['title', 'image'], 'string', 'max' => 255],
@@ -80,16 +80,6 @@ class Article extends ActiveRecord
     {
         $this->deleteImage();
         return parent::beforeDelete();
-    }
-
-    /**
-     * @param $categoryId
-     * @return bool
-     */
-    public function saveCategory($categoryId): bool
-    {
-        $this->category_id = $categoryId;
-        return $this->save(false);
     }
 
     /**
