@@ -32,4 +32,20 @@ class ArticleRepository extends BaseModelRepository
 
         return true;
     }
+
+    /**
+     * @return Article[]
+     */
+    public function findThreeOrderByViewedDesc(): array
+    {
+        return Article::find()->orderBy('viewed desc')->limit(3)->all();
+    }
+
+    /**
+     * @return Article[]
+     */
+    public function findFourOrderByDateDesc(): array
+    {
+        return Article::find()->orderBy('date desc')->limit(4)->all();
+    }
 }

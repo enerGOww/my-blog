@@ -3,6 +3,7 @@
 namespace app\entity;
 
 use app\traits\ImageTrait;
+use Yii;
 use yii\base\InvalidConfigException;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -116,5 +117,14 @@ class Article extends ActiveRecord
     public function getCategory()
     {
         return $this->hasOne(Category::class, ['id' => 'category_id']);
+    }
+
+    /**
+     * @return string
+     * @throws InvalidConfigException
+     */
+    public function getDate(): string
+    {
+        return Yii::$app->formatter->asDate($this->date);
     }
 }

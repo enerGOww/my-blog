@@ -3,8 +3,10 @@
 namespace app\controllers;
 
 use app\entity\Article;
+use app\repository\ArticleRepository;
+use app\repository\CategoryRepository;
+use app\service\PaginationService;
 use Yii;
-use yii\data\Pagination;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
@@ -13,6 +15,29 @@ use app\form\LoginForm;
 
 class SiteController extends Controller
 {
+    /** @var PaginationService */
+    private $paginationService;
+
+    /** @var ArticleRepository */
+    private $articleRepository;
+
+    /** @var CategoryRepository */
+    private $categoryRepository;
+
+    public function __construct(
+        $id,
+        $module,
+        PaginationService $paginationService,
+        ArticleRepository $articleRepository,
+        CategoryRepository $categoryRepository,
+        $config = []
+    ) {
+        parent::__construct($id, $module, $config);
+        $this->paginationService = $paginationService;
+        $this->articleRepository = $articleRepository;
+        $this->categoryRepository = $categoryRepository;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -62,17 +87,19 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $query = Article::find();
-        $count = $query->count();
+        list($pagination, $articles) = $this->paginationService->getPagination(Article::class, 1);
 
-        $pagination = new Pagination(['totalCount' => $count, 'pageSize' => 1]);
+        $populars = $this->articleRepository->findThreeOrderByViewedDesc();
+        $resents = $this->articleRepository->findFourOrderByDateDesc();
+        $categories = $this->categoryRepository->findAll();
 
-        $articles = $query
-            ->offset($pagination->offset)
-            ->limit($pagination->limit)
-            ->all();
-
-        return $this->render('index', compact('articles', 'pagination'));
+        return $this->render('index', compact(
+            'articles',
+            'pagination',
+            'populars',
+            'resents',
+            'categories'
+        ));
     }
 
     /**
