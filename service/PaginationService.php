@@ -7,7 +7,12 @@ use yii\db\ActiveRecord;
 
 class PaginationService
 {
-    public function getPagination(string $className, int $pageSize): array
+    /**
+     * @param string $className
+     * @param int $pageSize
+     * @return ActiveRecord[]
+     */
+    public function getPagination(string $className, int $pageSize = 5): array
     {
         /** @var ActiveRecord $className */
         $query = $className::find();

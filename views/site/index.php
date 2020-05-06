@@ -4,11 +4,13 @@
 /* @var $pagination */
 /* @var $populars Article[] */
 /* @var $articles Article[] */
-/* @var $resents Article[] */
+/* @var $recents Article[] */
 /* @var $categories Category[] */
 
 use app\entity\Article;
 use app\entity\Category;
+use app\widgets\sidebar\SidebarWidget;
+use yii\helpers\Url;
 use yii\web\View;
 use yii\widgets\LinkPager;
 
@@ -21,9 +23,9 @@ $this->title = 'My blog';
                 <?php foreach ($articles as $article): ?>
                     <article class="post">
                     <div class="post-thumb">
-                        <a href="blog.html"><img src=<?= $article->getImage() ?>></a>
+                        <a href="<?= Url::toRoute(['site/article', 'id' => $article->id]) ?>"><img src=<?= $article->getImage() ?>></a>
 
-                        <a href="blog.html" class="post-thumb-overlay text-center">
+                        <a href="<?= Url::toRoute(['site/article', 'id' => $article->id]) ?>" class="post-thumb-overlay text-center">
                             <div class="text-uppercase text-center">View Post</div>
                         </a>
                     </div>
@@ -31,7 +33,7 @@ $this->title = 'My blog';
                         <header class="entry-header text-center text-uppercase">
                             <h6><a href="#"> <?= $article->category->title ?></a></h6>
 
-                            <h1 class="entry-title"><a href="blog.html">Home is peaceful place</a></h1>
+                            <h1 class="entry-title"><a href="<?= Url::toRoute(['site/article', 'id' => $article->id]) ?>">Home is peaceful place</a></h1>
 
 
                         </header>
@@ -41,7 +43,7 @@ $this->title = 'My blog';
                             </p>
 
                             <div class="btn-continue-reading text-center text-uppercase">
-                                <a href="blog.html" class="more-link">Continue Reading</a>
+                                <a href="<?= Url::toRoute(['site/article', 'id' => $article->id]) ?>" class="more-link">Continue Reading</a>
                             </div>
                         </div>
                         <div class="social-share">
@@ -54,69 +56,17 @@ $this->title = 'My blog';
                 </article>
                 <?php endforeach; ?>
 
-                <?php
-                echo LinkPager::widget([
+                <?= LinkPager::widget([
                     'pagination' => $pagination
                     ]);
                 ?>
             </div>
-            <div class="col-md-4" data-sticky_column>
-                <div class="primary-sidebar">
-
-                    <aside class="widget">
-                        <h3 class="widget-title text-uppercase text-center">Popular Posts</h3>
-
-                        <?php foreach ($populars as $popular): ?>
-                            <div class="popular-post">
-
-
-                                <a href="#" class="popular-img"><img src= <?= $popular->getImage(); ?> >
-
-                                    <div class="p-overlay"></div>
-                                </a>
-
-                                <div class="p-content">
-                                    <a href="#" class="text-uppercase"><?= $popular->title ?></a>
-                                    <span class="p-date"><?= $popular->getDate() ?></span>
-
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-
-                    </aside>
-                    <aside class="widget pos-padding">
-                        <h3 class="widget-title text-uppercase text-center">Recent Posts</h3>
-
-                        <?php foreach ($resents as $resent): ?>
-                            <div class="thumb-latest-posts">
-                                <div class="media">
-                                    <div class="media-left">
-                                        <a href="#" class="popular-img"><img src= <?= $resent->getImage() ?> >
-                                            <div class="p-overlay"></div>
-                                        </a>
-                                    </div>
-                                    <div class="p-content">
-                                        <a href="#" class="text-uppercase"> <?= $resent->title ?> </a>
-                                        <span class="p-date"> <?= $resent->getDate() ?> </span>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-
-                    </aside>
-                    <aside class="widget border pos-padding">
-                        <h3 class="widget-title text-uppercase text-center">Categories</h3>
-                        <ul>
-                            <?php foreach ($categories as $category): ?>
-                                <li>
-                                    <a href="#"> <?= $category->title ?> </a>
-                                    <span class="post-count pull-right"> (<?= $category->getArticles()->count() ?>) </span>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </aside>
-                </div>
-            </div>
+            <?= SidebarWidget::widget([
+                'popularPosts' => $populars,
+                'recentPosts' => $recents,
+                'categories' => $categories
+                ]);
+            ?>
         </div>
     </div>
 </div>

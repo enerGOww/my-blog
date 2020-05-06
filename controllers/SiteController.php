@@ -5,10 +5,12 @@ namespace app\controllers;
 use app\entity\Article;
 use app\repository\ArticleRepository;
 use app\repository\CategoryRepository;
+use app\repository\TagRepository;
 use app\service\PaginationService;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\form\LoginForm;
@@ -24,18 +26,23 @@ class SiteController extends Controller
     /** @var CategoryRepository */
     private $categoryRepository;
 
+    /** @var TagRepository */
+    private $tagRepository;
+
     public function __construct(
         $id,
         $module,
         PaginationService $paginationService,
         ArticleRepository $articleRepository,
         CategoryRepository $categoryRepository,
+        TagRepository $tagRepository,
         $config = []
     ) {
         parent::__construct($id, $module, $config);
         $this->paginationService = $paginationService;
         $this->articleRepository = $articleRepository;
         $this->categoryRepository = $categoryRepository;
+        $this->tagRepository = $tagRepository;
     }
 
     /**
@@ -87,17 +94,17 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        list($pagination, $articles) = $this->paginationService->getPagination(Article::class, 1);
+        list($pagination, $articles) = $this->paginationService->getPagination(Article::class);
 
         $populars = $this->articleRepository->findThreeOrderByViewedDesc();
-        $resents = $this->articleRepository->findFourOrderByDateDesc();
+        $recents = $this->articleRepository->findFourOrderByDateDesc();
         $categories = $this->categoryRepository->findAll();
 
         return $this->render('index', compact(
             'articles',
             'pagination',
             'populars',
-            'resents',
+            'recents',
             'categories'
         ));
     }
@@ -146,13 +153,41 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
-    public function actionArticle()
+    /**
+     * @param int $id
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionArticle(int $id)
     {
-        return $this->render('article');
+        $article = $this->articleRepository->findModelById($id);
+
+        $populars = $this->articleRepository->findThreeOrderByViewedDesc();
+        $recents = $this->articleRepository->findFourOrderByDateDesc();
+        $categories = $this->categoryRepository->findAll();
+
+        return $this->render(
+            'article', compact(
+            'article',
+                'populars',
+                'recents',
+                'categories'
+            ));
     }
 
     public function actionCategory()
     {
         return $this->render('category');
+    }
+
+    /**
+     * @param int $id
+     * @return string
+     */
+    public function actionTag(int $id)
+    {
+        $tag = $this->tagRepository->findModelById($id);
+
+        return $this->render('tag', compact('tag'));
     }
 }
