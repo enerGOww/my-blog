@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\form\LoginForm;
 use app\form\SignupForm;
+use app\service\LoginUserVkService;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -11,6 +12,19 @@ use yii\web\Response;
 
 class AuthController extends Controller
 {
+    /** @var LoginUserVkService */
+    private $loginVkService;
+
+    public function __construct(
+        $id,
+        $module,
+        LoginUserVkService $loginUserVkService,
+        $config = []
+    ) {
+        parent::__construct($id, $module, $config);
+        $this->loginVkService = $loginUserVkService;
+    }
+
     public function behaviors()
     {
         return [
@@ -76,5 +90,14 @@ class AuthController extends Controller
         return $this->render('signup', [
             'model' => $model,
         ]);
+    }
+
+    public function actionLoginVk(int $uid, string $first_name, string $photo)
+    {
+        if ($this->loginVkService->loginUserAndSaveIfNew($uid, $first_name, $photo)) {
+            return $this->redirect(['site/index']);
+        }
+
+        return $this->redirect(['auth/login']);
     }
 }
