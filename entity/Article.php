@@ -26,7 +26,6 @@ use yii\db\ActiveRecord;
  * @property User $user
  * @property ArticleTag[] $articleTags
  * @property Tag[] $tags
- * @property Comment[] $comments
  */
 class Article extends ActiveRecord
 {
@@ -125,14 +124,6 @@ class Article extends ActiveRecord
     {
         return $this->hasMany(Tag::class, ['id' => 'tag_id'])
             ->viaTable('article_tag', ['article_id' => 'id']);
-    }
-
-    /**
-     * @return ActiveQuery
-     */
-    public function getComments()
-    {
-        return $this->hasMany(Comment::class, ['article_id' => 'id']);
     }
 
     /**

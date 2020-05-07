@@ -32,7 +32,7 @@ use yii\widgets\ActiveForm;
 <?php endif; ?>
 
 <?php if (!Yii::$app->user->isGuest): ?>
-    <div class="leave-comment"><!--leave comment-->
+    <div class="leave-comment">
         <h4>Leave a reply</h4>
         <?= Alert::widget() ?>
         <?php

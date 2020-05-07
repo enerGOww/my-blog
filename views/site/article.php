@@ -4,17 +4,18 @@
 /* @var $article Article */
 /* @var $populars Article[] */
 /* @var $recents Article[] */
+/* @var $comments Comment[] */
 /* @var $categories Category[] */
 /* @var $commentForm CommentForm */
 
 use app\entity\Article;
 use app\entity\Category;
+use app\entity\Comment;
 use app\form\CommentForm;
 use app\widgets\comment\CommentWidget;
 use app\widgets\sidebar\SidebarWidget;
 use yii\helpers\Url;
 use yii\web\View;
-use yii\widgets\Pjax;
 
 $this->title = $article->title;
 ?>
@@ -56,14 +57,12 @@ $this->title = $article->title;
                     </div>
                 </article>
 
-                <?php Pjax::begin() ?>
                 <?= CommentWidget::widget([
-                    'comments' => $article->comments,
+                    'comments' => $comments,
                     'commentForm' => $commentForm,
                     'idToRecord' => $article->id
                 ]);
                 ?>
-                <?php Pjax::end() ?>
 
             </div>
 

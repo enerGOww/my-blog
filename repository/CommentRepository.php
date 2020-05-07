@@ -32,4 +32,12 @@ class CommentRepository extends BaseModelRepository
 
         return true;
     }
+
+    public function findAllByArticleId(int $articleId): array
+    {
+        return Comment::find()
+            ->where(['article_id' => $articleId])
+            ->orderBy('id ASC')
+            ->all();
+    }
 }
