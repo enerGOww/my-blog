@@ -16,7 +16,7 @@ class PaginationService
     public function getPagination(string $className, array $whereCondition = [], int $pageSize = 5): array
     {
         /** @var ActiveRecord $className */
-        $query = $className::find();
+        $query = $className::find()->orderBy('id DESC');
 
         foreach ($whereCondition as $column => $condition) {
             $query->where(["$column" => $condition]);

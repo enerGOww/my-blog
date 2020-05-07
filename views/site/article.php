@@ -14,6 +14,7 @@ use app\widgets\comment\CommentWidget;
 use app\widgets\sidebar\SidebarWidget;
 use yii\helpers\Url;
 use yii\web\View;
+use yii\widgets\Pjax;
 
 $this->title = $article->title;
 ?>
@@ -55,12 +56,14 @@ $this->title = $article->title;
                     </div>
                 </article>
 
+                <?php Pjax::begin() ?>
                 <?= CommentWidget::widget([
                     'comments' => $article->comments,
                     'commentForm' => $commentForm,
                     'idToRecord' => $article->id
                 ]);
                 ?>
+                <?php Pjax::end() ?>
 
             </div>
 
