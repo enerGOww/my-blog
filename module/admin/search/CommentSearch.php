@@ -1,15 +1,15 @@
 <?php
 
-namespace app\search;
+namespace app\module\admin\search;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\entity\Article;
+use app\entity\Comment;
 
 /**
- * ArticleSearch represents the model behind the search form of `app\entity\Article`.
+ * CommentSearch represents the model behind the search form of `app\entity\Comment`.
  */
-class ArticleSearch extends Article
+class CommentSearch extends Comment
 {
     /**
      * {@inheritdoc}
@@ -17,8 +17,8 @@ class ArticleSearch extends Article
     public function rules()
     {
         return [
-            [['id', 'viewed', 'user_id', 'status', 'category_id'], 'integer'],
-            [['title', 'description', 'content', 'date', 'image'], 'safe'],
+            [['id', 'user_id', 'article_id'], 'integer'],
+            [['text', 'date'], 'safe'],
         ];
     }
 
@@ -40,7 +40,7 @@ class ArticleSearch extends Article
      */
     public function search($params)
     {
-        $query = Article::find();
+        $query = Comment::find();
 
         // add conditions that should always apply here
 
@@ -60,16 +60,11 @@ class ArticleSearch extends Article
         $query->andFilterWhere([
             'id' => $this->id,
             'date' => $this->date,
-            'viewed' => $this->viewed,
             'user_id' => $this->user_id,
-            'status' => $this->status,
-            'category_id' => $this->category_id,
+            'article_id' => $this->article_id,
         ]);
 
-        $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'description', $this->description])
-            ->andFilterWhere(['like', 'content', $this->content])
-            ->andFilterWhere(['like', 'image', $this->image]);
+        $query->andFilterWhere(['like', 'text', $this->text]);
 
         return $dataProvider;
     }

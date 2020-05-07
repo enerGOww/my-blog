@@ -9,7 +9,7 @@ use app\repository\CategoryRepository;
 use app\repository\TagRepository;
 use Yii;
 use app\entity\Article;
-use app\search\ArticleSearch;
+use app\module\admin\search\ArticleSearch;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;

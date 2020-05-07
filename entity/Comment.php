@@ -15,7 +15,6 @@ use yii\db\ActiveRecord;
  * @property string|null $date
  * @property int|null $user_id
  * @property int|null $article_id
- * @property int|null $status
  *
  * @property Article $article
  * @property User $user
@@ -38,7 +37,7 @@ class Comment extends ActiveRecord
         return [
             [['text'], 'required'],
             [['date'], 'safe'],
-            [['user_id', 'article_id', 'status'], 'integer'],
+            [['user_id', 'article_id'], 'integer'],
             [['text'], 'string', 'max' => 255],
             [['article_id'], 'exist', 'skipOnError' => true, 'targetClass' => Article::class, 'targetAttribute' => ['article_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
@@ -56,7 +55,6 @@ class Comment extends ActiveRecord
             'date' => 'Date',
             'user_id' => 'User',
             'article_id' => 'Article',
-            'status' => 'Status',
         ];
     }
 

@@ -5,7 +5,7 @@ namespace app\module\admin\controllers;
 use app\repository\CategoryRepository;
 use Yii;
 use app\entity\Category;
-use app\search\CategorySearch;
+use app\module\admin\search\CategorySearch;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\web\Response;

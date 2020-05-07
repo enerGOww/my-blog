@@ -1,7 +1,7 @@
 <?php
 
 use app\entity\Article;
-use app\search\ArticleSearch;
+use app\module\admin\search\ArticleSearch;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 use yii\grid\GridView;
