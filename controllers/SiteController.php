@@ -115,6 +115,9 @@ class SiteController extends Controller
         $categories = $this->categoryRepository->findAll();
         $commentForm = new CommentForm();
 
+        $article->viewed++;
+        $this->articleRepository->save($article);
+
         return $this->render('article', compact(
             'article',
             'populars',
