@@ -17,6 +17,7 @@ use yii\web\IdentityInterface;
  * @property string $password write-only password
  * @property integer $id
  * @property string $photo
+ * @property bool $isAdmin
  */
 class User extends ActiveRecord implements IdentityInterface
 {
