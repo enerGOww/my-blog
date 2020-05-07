@@ -23,6 +23,7 @@ use yii\db\ActiveRecord;
  * @property int|null $category_id
  *
  * @property Category $category
+ * @property User $user
  * @property ArticleTag[] $articleTags
  * @property Tag[] $tags
  * @property Comment[] $comments
@@ -84,6 +85,21 @@ class Article extends ActiveRecord
     }
 
     /**
+     * @param bool $insert
+     * @return bool
+     */
+    public function beforeSave($insert)
+    {
+        $insert ? $this->beforeInsert() : null;
+        return parent::beforeSave($insert);
+    }
+
+    private function beforeInsert()
+    {
+        $this->user_id = Yii::$app->user->id;
+    }
+
+    /**
      * @param $tags
      */
     public function saveTags($tags)
@@ -117,6 +133,14 @@ class Article extends ActiveRecord
     public function getCategory()
     {
         return $this->hasOne(Category::class, ['id' => 'category_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 
     /**

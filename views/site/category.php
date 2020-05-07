@@ -32,7 +32,7 @@ $this->title = 'My blog';
                                         <div class="text-uppercase text-center">View Post</div>
                                     </a>
                                 </div>
-                            </div>
+                            </div>T
                             <div class="col-md-6">
                                 <div class="post-content">
                                     <header class="entry-header text-uppercase">
@@ -44,7 +44,7 @@ $this->title = 'My blog';
                                         <p><?= $article->description ?></p>
                                     </div>
                                     <div class="social-share">
-                                        <span class="social-share-title pull-left text-capitalize">By Rubel On <?= $article->getDate() ?></span>
+                                        <span class="social-share-title pull-left text-capitalize">By <?= $article->user->name ?> On <?= $article->getDate() ?></span>
                                     </div>
                                 </div>
                             </div>
