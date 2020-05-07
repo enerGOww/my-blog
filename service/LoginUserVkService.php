@@ -16,7 +16,7 @@ class LoginUserVkService
         $this->userRepository = $userRepository;
     }
 
-    public function loginUserAndSaveIfNew(int $id, string $name, string $photo): bool
+    public function loginUserAndSaveIfNew(int $id, string $name, string $image): bool
     {
         $user = $this->userRepository->findOneById($id);
         if ($user) {
@@ -26,7 +26,7 @@ class LoginUserVkService
         $user = new User();
         $user->name = $name;
         $user->id = $id;
-        $user->photo = $photo;
+        $user->image = $image;
         $user->setPassword($id);
         $user->generateAuthKey();
         $this->userRepository->save($user);

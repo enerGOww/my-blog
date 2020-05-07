@@ -3,10 +3,13 @@
 namespace app\controllers;
 
 use app\entity\Article;
+use app\form\CommentForm;
 use app\repository\ArticleRepository;
 use app\repository\CategoryRepository;
 use app\repository\TagRepository;
 use app\service\PaginationService;
+use app\service\SaveCommentService;
+use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 
@@ -24,6 +27,9 @@ class SiteController extends Controller
     /** @var TagRepository */
     private $tagRepository;
 
+    /** @var SaveCommentService */
+    private $saveCommentService;
+
     public function __construct(
         $id,
         $module,
@@ -31,6 +37,7 @@ class SiteController extends Controller
         ArticleRepository $articleRepository,
         CategoryRepository $categoryRepository,
         TagRepository $tagRepository,
+        SaveCommentService $saveCommentService,
         $config = []
     ) {
         parent::__construct($id, $module, $config);
@@ -38,6 +45,7 @@ class SiteController extends Controller
         $this->articleRepository = $articleRepository;
         $this->categoryRepository = $categoryRepository;
         $this->tagRepository = $tagRepository;
+        $this->saveCommentService = $saveCommentService;
     }
 
     /**
@@ -105,12 +113,14 @@ class SiteController extends Controller
         $populars = $this->articleRepository->findThreeOrderByViewedDesc();
         $recents = $this->articleRepository->findFourOrderByDateDesc();
         $categories = $this->categoryRepository->findAll();
+        $commentForm = new CommentForm();
 
         return $this->render('article', compact(
             'article',
             'populars',
             'recents',
-            'categories'
+            'categories',
+            'commentForm'
         ));
     }
 
@@ -155,5 +165,21 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+
+    public function actionComment(int $articleId)
+    {
+        $form = new CommentForm();
+        if (
+            Yii::$app->request->isPost
+            && $form->load(Yii::$app->request->post())
+            && $this->saveCommentService->saveCommentByFormAndArticleId($form, $articleId)
+        ) {
+            Yii::$app->getSession()->setFlash('success', 'Comment added successfully');
+            return $this->redirect(['site/article', 'id' => $articleId]);
+        }
+
+        Yii::$app->getSession()->setFlash('error', 'Your comment not safe. Something went wrong');
+        return $this->redirect(['site/article', 'id' => $articleId]);
     }
 }

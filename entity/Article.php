@@ -130,6 +130,14 @@ class Article extends ActiveRecord
     /**
      * @return ActiveQuery
      */
+    public function getComments()
+    {
+        return $this->hasMany(Comment::class, ['article_id' => 'id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
     public function getCategory()
     {
         return $this->hasOne(Category::class, ['id' => 'category_id']);

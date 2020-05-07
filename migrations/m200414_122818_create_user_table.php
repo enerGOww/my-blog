@@ -18,7 +18,7 @@ class m200414_122818_create_user_table extends Migration
             'email'=>$this->string()->defaultValue(null),
             'password'=>$this->string(),
             'isAdmin'=>$this->integer()->defaultValue(0),
-            'photo'=>$this->string()->defaultValue(null)
+            'image'=>$this->string()->defaultValue(null)
         ]);
     }
 

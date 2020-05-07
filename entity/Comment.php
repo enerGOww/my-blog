@@ -2,6 +2,8 @@
 
 namespace app\entity;
 
+use Yii;
+use yii\base\InvalidConfigException;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
@@ -76,5 +78,14 @@ class Comment extends ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
+    }
+
+    /**
+     * @return string
+     * @throws InvalidConfigException
+     */
+    public function getDate(): string
+    {
+        return Yii::$app->formatter->asDate($this->date);
     }
 }

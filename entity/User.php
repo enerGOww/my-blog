@@ -2,6 +2,7 @@
 
 namespace app\entity;
 
+use app\traits\ImageTrait;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -16,11 +17,13 @@ use yii\web\IdentityInterface;
  * @property integer $status
  * @property string $password write-only password
  * @property integer $id
- * @property string $photo
+ * @property string $image
  * @property bool $isAdmin
  */
 class User extends ActiveRecord implements IdentityInterface
 {
+    use ImageTrait;
+
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
 
@@ -52,9 +55,8 @@ class User extends ActiveRecord implements IdentityInterface
             'id' => 'ID',
             'name' => 'Name',
             'email' => 'Email',
-            'password' => 'Password',
             'isAdmin' => 'Is Admin',
-            'photo' => 'Photo',
+            'image' => 'Image',
         ];
     }
 
