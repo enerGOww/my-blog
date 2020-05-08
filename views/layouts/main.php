@@ -4,6 +4,7 @@
 /* @var $content string */
 
 use app\assets\PublicAsset;
+use app\widgets\sidebar\SidebarWidget;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\View;
@@ -52,7 +53,13 @@ PublicAsset::register($this);
     </div>
 </nav>
 
-<?= $content ?>
+<div class="main-content">
+    <div class="container">
+        <?= $content ?>
+    </div>
+</div>
+
+<?= SidebarWidget::widget() ?>
 
 <footer class="footer-widget-section">
     <div class="footer-copy">

@@ -181,16 +181,6 @@ class SiteController extends Controller
         ));
     }
 
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
-    }
-
     public function actionComment(int $articleId)
     {
         $form = new CommentForm();
