@@ -27,7 +27,7 @@ use yii\db\ActiveRecord;
  * @property ArticleTag[] $articleTags
  * @property Tag[] $tags
  */
-class Article extends ActiveRecord
+class Article extends ActiveRecord implements EntityImageInterface
 {
     use ImageTrait;
 

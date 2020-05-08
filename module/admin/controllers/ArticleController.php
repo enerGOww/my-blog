@@ -2,7 +2,7 @@
 
 namespace app\module\admin\controllers;
 
-use app\command\SaveImageCommand;
+use app\service\SaveImageService;
 use app\model\ImageUploader;
 use app\repository\ArticleRepository;
 use app\repository\CategoryRepository;
@@ -21,8 +21,8 @@ use yii\web\Response;
  */
 class ArticleController extends Controller
 {
-    /** @var SaveImageCommand */
-    private $saveImageCommand;
+    /** @var SaveImageService */
+    private $saveImageService;
 
     /** @var ArticleRepository */
     private $articleRepository;
@@ -36,14 +36,14 @@ class ArticleController extends Controller
     public function __construct(
         $id,
         $module,
-        SaveImageCommand $saveImageCommand,
+        SaveImageService $saveImageService,
         ArticleRepository $articleRepository,
         CategoryRepository $categoryRepository,
         TagRepository $tagRepository,
         $config = []
     ) {
         parent::__construct($id, $module, $config);
-        $this->saveImageCommand = $saveImageCommand;
+        $this->saveImageService = $saveImageService;
         $this->articleRepository = $articleRepository;
         $this->categoryRepository = $categoryRepository;
         $this->tagRepository = $tagRepository;
@@ -151,7 +151,8 @@ class ArticleController extends Controller
     {
         $imageModel = new ImageUploader();
         if (Yii::$app->request->isPost) {
-            if ($this->saveImageCommand->execute($imageModel, $id)) {
+            $article = $this->articleRepository->findModelById($id);
+            if ($this->saveImageService->save($imageModel, $article)) {
                 return $this->redirect(['view', 'id' => $id]);
             }
         }
