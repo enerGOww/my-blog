@@ -86,6 +86,20 @@ class SiteController extends Controller
         ];
     }
 
+    public function beforeAction($action)
+    {
+        Yii::$app->view->params['populars'] = Yii::$app->cache->getOrSet('populars', function () {
+            return $this->articleRepository->findThreePublishedOrderByViewedDesc();
+        }, 3600);
+        Yii::$app->view->params['recents'] = Yii::$app->cache->getOrSet('recents', function () {
+            return $this->articleRepository->findFourPublishedOrderByDateDesc();
+        }, 3600);
+        Yii::$app->view->params['categories'] = Yii::$app->cache->getOrSet('categories', function () {
+            return $this->categoryRepository->findAll();
+        }, 3600);
+        return parent::beforeAction($action);
+    }
+
     /**
      * Displays homepage.
      *
@@ -93,18 +107,12 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        list($pagination, $articles) = $this->paginationService->getPagination(Article::class);
-
-        $populars = $this->articleRepository->findThreeOrderByViewedDesc();
-        $recents = $this->articleRepository->findFourOrderByDateDesc();
-        $categories = $this->categoryRepository->findAll();
+        list($pagination, $articles) = $this->paginationService
+            ->getPagination(Article::class, ['status' => Article::PUBLISHED]);
 
         return $this->render('index', compact(
             'articles',
-            'pagination',
-            'populars',
-            'recents',
-            'categories'
+            'pagination'
         ));
     }
 
@@ -117,9 +125,6 @@ class SiteController extends Controller
     {
         $article = $this->articleRepository->findModelById($id);
 
-        $populars = $this->articleRepository->findThreeOrderByViewedDesc();
-        $recents = $this->articleRepository->findFourOrderByDateDesc();
-        $categories = $this->categoryRepository->findAll();
         $comments = $this->commentRepository->findAllByArticleId($id);
         $commentForm = new CommentForm();
 
@@ -128,9 +133,6 @@ class SiteController extends Controller
 
         return $this->render('article', compact(
             'article',
-            'populars',
-            'recents',
-            'categories',
             'commentForm',
             'comments'
         ));
@@ -143,18 +145,11 @@ class SiteController extends Controller
     public function actionCategory(int $id)
     {
         list($pagination, $articles) = $this->paginationService
-            ->getPagination(Article::class, ['category_id' => $id]);
-
-        $populars = $this->articleRepository->findThreeOrderByViewedDesc();
-        $recents = $this->articleRepository->findFourOrderByDateDesc();
-        $categories = $this->categoryRepository->findAll();
+            ->getPagination(Article::class, ['category_id' => $id, 'status' => Article::PUBLISHED]);
 
         return $this->render('category', compact(
             'articles',
-            'pagination',
-            'populars',
-            'recents',
-            'categories'
+            'pagination'
         ));
     }
 
@@ -166,18 +161,12 @@ class SiteController extends Controller
     public function actionTag(int $id)
     {
         $tag = $this->tagRepository->findModelById($id);
-        list($pagination, $articles) = $this->paginationService->getPaginationForM2m($tag->getArticles());
-
-        $populars = $this->articleRepository->findThreeOrderByViewedDesc();
-        $recents = $this->articleRepository->findFourOrderByDateDesc();
-        $categories = $this->categoryRepository->findAll();
+        list($pagination, $articles) = $this->paginationService
+            ->getPaginationForM2m($tag->getArticles(), ['status' => Article::PUBLISHED]);
 
         return $this->render('category', compact(
             'articles',
-            'pagination',
-            'populars',
-            'recents',
-            'categories'
+            'pagination'
         ));
     }
 

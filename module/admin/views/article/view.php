@@ -1,5 +1,6 @@
 <?php
 
+use app\entity\Article;
 use yii\helpers\Html;
 use yii\web\YiiAsset;
 use yii\widgets\DetailView;
@@ -17,6 +18,7 @@ YiiAsset::register($this);
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
+        <?= Html::a('Switch state', ['switch-state', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Set image', ['set-image', 'id' => $model->id], ['class' => 'btn btn-default']) ?>
         <?= Html::a('Set category', ['set-category', 'id' => $model->id], ['class' => 'btn btn-default']) ?>
@@ -40,9 +42,28 @@ YiiAsset::register($this);
             'date',
             'image',
             'viewed',
-            'user_id',
-            'status',
-            'category_id',
+            'user_id' => [
+                'label' => 'Author',
+                'value' => function(Article $data) {
+                    return $data->user->name;
+                }
+            ],
+            'status' => [
+                'label' => 'Status',
+                'value' => function(Article $data) {
+                    if ($data->status === 10) {
+                        return 'Published';
+                    }
+
+                    return 'Unpublished';
+                }
+            ],
+            'category_id' => [
+                'label' => 'Category',
+                'value' => function(Article $data) {
+                    return $data->category->title;
+                }
+            ],
         ],
     ]) ?>
 

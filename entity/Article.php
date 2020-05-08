@@ -31,6 +31,9 @@ class Article extends ActiveRecord implements EntityImageInterface
 {
     use ImageTrait;
 
+    public const PUBLISHED = 10;
+    public const UNPUBLISHED = 9;
+
     /**
      * {@inheritdoc}
      */
@@ -68,7 +71,7 @@ class Article extends ActiveRecord implements EntityImageInterface
             'date' => 'Date',
             'image' => 'Image',
             'viewed' => 'Viewed',
-            'user_id' => 'User',
+            'user_id' => 'Author',
             'status' => 'Status',
             'category_id' => 'Category',
         ];

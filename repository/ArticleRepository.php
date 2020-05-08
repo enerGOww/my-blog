@@ -36,16 +36,24 @@ class ArticleRepository extends BaseModelRepository
     /**
      * @return Article[]
      */
-    public function findThreeOrderByViewedDesc(): array
+    public function findThreePublishedOrderByViewedDesc(): array
     {
-        return Article::find()->orderBy('viewed desc')->limit(3)->all();
+        return Article::find()
+            ->where(['status' => Article::PUBLISHED])
+            ->orderBy('viewed desc')
+            ->limit(3)
+            ->all();
     }
 
     /**
      * @return Article[]
      */
-    public function findFourOrderByDateDesc(): array
+    public function findFourPublishedOrderByDateDesc(): array
     {
-        return Article::find()->orderBy('date desc')->limit(4)->all();
+        return Article::find()
+            ->where(['status' => Article::PUBLISHED])
+            ->orderBy('date desc')
+            ->limit(4)
+            ->all();
     }
 }

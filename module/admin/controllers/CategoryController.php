@@ -79,6 +79,7 @@ class CategoryController extends Controller
         $category = new Category();
 
         if ($category->load(Yii::$app->request->post()) && $this->categoryRepository->save($category)) {
+            Yii::$app->cache->flush();
             return $this->redirect(['view', 'id' => $category->id]);
         }
 
@@ -113,6 +114,7 @@ class CategoryController extends Controller
     {
         $this->categoryRepository->deleteById($id);
 
+        Yii::$app->cache->flush();
         return $this->redirect(['index']);
     }
 }

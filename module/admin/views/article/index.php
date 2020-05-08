@@ -45,11 +45,17 @@ $this->params['breadcrumbs'][] = $this->title;
                     return Html::img($data->getImage(), ['width' => 200]);
                 }
             ],
-            //'image',
-            //'viewed',
-            //'user_id',
-            //'status',
-            //'category_id',
+            'viewed',
+            [
+               'label' => 'status',
+               'value' => function(Article $data) {
+                    if ($data->status === 10) {
+                        return 'Published';
+                    }
+
+                    return 'Unpublished';
+               }
+            ],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

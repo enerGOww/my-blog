@@ -139,6 +139,7 @@ class ArticleController extends Controller
     {
         $this->articleRepository->deleteById($id);
 
+        Yii::$app->cache->flush();
         return $this->redirect(['index']);
     }
 
@@ -200,5 +201,28 @@ class ArticleController extends Controller
         $selectedTags = $this->tagRepository->findAllIdsByArticleId($id);
         $tags = ArrayHelper::map($this->tagRepository->findAll(), 'id', 'title');
         return $this->render('tags', compact('article', 'selectedTags', 'tags'));
+    }
+
+    public function actionSwitchState(int $id)
+    {
+        $article = $this->articleRepository->findModelById($id);
+        if ($article->status === Article::PUBLISHED) {
+            $article->status = Article::UNPUBLISHED;
+            if ($this->articleRepository->save($article)) {
+                Yii::$app->getSession()->setFlash('success', 'Article unpublished successfully.');
+                Yii::$app->cache->flush();
+                return $this->redirect(['view', 'id' => $article->id]);
+            }
+        } else {
+            $article->status = Article::PUBLISHED;
+            if ($this->articleRepository->save($article)) {
+                Yii::$app->getSession()->setFlash('success', 'Article published successfully.');
+                Yii::$app->cache->flush();
+                return $this->redirect(['view', 'id' => $article->id]);
+            }
+        }
+
+        Yii::$app->getSession()->setFlash('error', 'Article don\'t published. Something went wrong');
+        return $this->redirect(['view', 'id' => $article->id]);
     }
 }

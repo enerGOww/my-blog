@@ -55,11 +55,17 @@ PublicAsset::register($this);
 
 <div class="main-content">
     <div class="container">
-        <?= $content ?>
+        <div class="row">
+            <?= $content ?>
+
+            <?= SidebarWidget::widget([
+                'popularPosts' => $this->params['populars'],
+                'recentPosts' => $this->params['recents'],
+                'categories' => $this->params['categories']
+            ])?>
+        </div>
     </div>
 </div>
-
-<?= SidebarWidget::widget() ?>
 
 <footer class="footer-widget-section">
     <div class="footer-copy">
