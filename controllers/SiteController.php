@@ -11,6 +11,7 @@ use app\repository\TagRepository;
 use app\service\PaginationService;
 use app\service\SaveCommentService;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 
@@ -160,12 +161,24 @@ class SiteController extends Controller
     /**
      * @param int $id
      * @return string
+     * @throws InvalidConfigException
      */
     public function actionTag(int $id)
     {
         $tag = $this->tagRepository->findModelById($id);
+        list($pagination, $articles) = $this->paginationService->getPaginationForM2m($tag->getArticles());
 
-        return $this->render('tag', compact('tag'));
+        $populars = $this->articleRepository->findThreeOrderByViewedDesc();
+        $recents = $this->articleRepository->findFourOrderByDateDesc();
+        $categories = $this->categoryRepository->findAll();
+
+        return $this->render('category', compact(
+            'articles',
+            'pagination',
+            'populars',
+            'recents',
+            'categories'
+        ));
     }
 
     /**

@@ -32,7 +32,7 @@ $this->title = 'My blog';
                                         <div class="text-uppercase text-center">View Post</div>
                                     </a>
                                 </div>
-                            </div>T
+                            </div>
                             <div class="col-md-6">
                                 <div class="post-content">
                                     <header class="entry-header text-uppercase">
