@@ -74,7 +74,7 @@ PublicAsset::register($this);
                 <div class="col-md-12">
                     <div class="text-center">&copy; 2020
                         <a href="<?= Url::toRoute(['site/index']) ?>">My-blog, </a> Create with
-                        <i class="fa fa-heart"></i> by <a href="https://gitlab.com/enerGOww" target="_blank">enerGOww</a>
+                        <i class="fa fa-heart"></i> by <a href="https://github.com/enerGOww" target="_blank">enerGOww</a>
                     </div>
                 </div>
             </div>
